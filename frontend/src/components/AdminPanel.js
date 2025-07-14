@@ -148,12 +148,18 @@ const AdminPanel = () => {
     webhook_url: '',
     is_active: true
   });
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     if (activeTab === 'users') {
       fetchUsers();
     } else {
       fetchRoleCards();
+    }
+    // Get current user from localStorage (token payload or user object)
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      setCurrentUser(JSON.parse(userStr));
     }
   }, [activeTab]);
 
@@ -244,6 +250,25 @@ const AdminPanel = () => {
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       setError('Failed to promote user to admin');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`/api/admin/users/${userId}/role`, { role: newRole }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setUsers(users.map(user =>
+        user.id === userId ? { ...user, role: newRole } : user
+      ));
+      setSuccess('User role updated successfully');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      setError('Failed to update user role');
       setTimeout(() => setError(''), 3000);
     }
   };
@@ -362,18 +387,27 @@ const AdminPanel = () => {
                 <tr key={user.id}>
                   <Td>{user.id}</Td>
                   <Td>{user.email}</Td>
-                  <Td>{user.role}</Td>
+                  <Td>
+                    {currentUser && currentUser.role === 'admin' ? (
+                      <select
+                        value={user.role}
+                        onChange={e => handleRoleChange(user.id, e.target.value)}
+                        disabled={user.id === currentUser.id} // Prevent self-demotion
+                        style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}
+                      >
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    ) : (
+                      user.role
+                    )}
+                  </Td>
                   <Td>
                     <StatusBadge active={!user.blocked}>
                       {user.blocked ? 'Blocked' : 'Active'}
                     </StatusBadge>
                   </Td>
                   <Td>
-                    {user.role !== 'admin' && (
-                      <ActionButton onClick={() => handleMakeAdmin(user.id)}>
-                        Make Admin
-                      </ActionButton>
-                    )}
                     {user.blocked ? (
                       <ActionButton onClick={() => handleUnblockUser(user.id)}>
                         Unblock
