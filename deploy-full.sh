@@ -17,8 +17,8 @@ echo "🧹 Force cleaning up..."
 sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
 sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
 sudo docker network prune -f
-sudo fuser -k 3001/tcp 2>/dev/null || true
 sudo fuser -k 3002/tcp 2>/dev/null || true
+sudo fuser -k 3003/tcp 2>/dev/null || true
 
 # Fix nginx conflicts
 echo "🔧 Fixing nginx conflicts..."
@@ -59,7 +59,7 @@ server {
     }
     
     location /api {
-        proxy_pass http://localhost:3001;
+        proxy_pass http://localhost:3003;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -124,7 +124,7 @@ server {
     }
     
     location /api {
-        proxy_pass http://localhost:3001;
+        proxy_pass http://localhost:3003;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
