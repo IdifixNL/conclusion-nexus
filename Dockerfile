@@ -35,7 +35,7 @@ COPY backend/ ./
 COPY --from=builder /app/frontend/build ./public
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3002
 
 # Start the application
 CMD ["npm", "start"] 

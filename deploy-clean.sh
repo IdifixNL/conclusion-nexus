@@ -11,9 +11,9 @@ docker-compose down 2>/dev/null || true
 docker stop $(docker ps -q) 2>/dev/null || true
 docker rm $(docker ps -aq) 2>/dev/null || true
 
-# Force kill anything using port 3000
-echo "🔌 Force killing processes on port 3000..."
-sudo fuser -k 3000/tcp 2>/dev/null || true
+# Force kill anything using port 3002
+echo "🔌 Force killing processes on port 3002..."
+sudo fuser -k 3002/tcp 2>/dev/null || true
 sudo pkill -f "3000" 2>/dev/null || true
 
 # Check what's using port 3000
@@ -28,7 +28,7 @@ echo "🐳 Deploying application..."
 docker-compose up -d --build
 
 echo "✅ Clean deployment complete!"
-echo "🌐 Your app should be running on port 3000"
+echo "🌐 Your app should be running on port 3002"
 echo ""
 echo "📋 Commands:"
 echo "  - View logs: docker-compose logs -f"
