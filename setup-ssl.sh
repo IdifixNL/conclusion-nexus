@@ -4,7 +4,7 @@
 # This script sets up HTTPS with Let's Encrypt certificates
 
 DOMAIN="ai-service-desk.baburek.eu"
-EMAIL="your-email@example.com"  # Change this to your email
+EMAIL="nico_baburek@hotmail.com"
 
 echo "Setting up SSL for $DOMAIN..."
 

@@ -4,7 +4,7 @@
 # This script handles deployment with SSL setup
 
 DOMAIN="ai-service-desk.baburek.eu"
-EMAIL="your-email@example.com"  # Change this to your email
+EMAIL="nico_baburek@hotmail.com"
 
 echo "🚀 Starting deployment for $DOMAIN..."
 
