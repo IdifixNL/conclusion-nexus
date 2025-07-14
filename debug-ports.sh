@@ -4,11 +4,11 @@ echo "🔍 DEBUGGING PORT 3000..."
 
 echo ""
 echo "📋 1. Checking what processes are using port 3000:"
-sudo netstat -tlnp | grep ":3000" || echo "No processes found on port 3000"
+sudo ss -tlnp | grep ":3000" || echo "No processes found on port 3000"
 
 echo ""
 echo "📋 2. Checking all listening ports:"
-sudo netstat -tlnp | grep LISTEN
+sudo ss -tlnp | grep LISTEN
 
 echo ""
 echo "📋 3. Checking Docker containers:"
@@ -35,4 +35,5 @@ echo "🔧 COMMANDS TO TRY:"
 echo "  - Kill all processes on port 3000: sudo fuser -k 3000/tcp"
 echo "  - Stop all containers: docker stop \$(docker ps -q)"
 echo "  - Remove all containers: docker rm \$(docker ps -aq)"
-echo "  - Restart Docker: sudo systemctl restart docker" 
+echo "  - Restart Docker: sudo systemctl restart docker"
+echo "  - Force remove the stuck container: docker rm -f conclusion-nexus-app" 
