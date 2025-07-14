@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Simple Deployment Script - Single Container Approach
+# Full Deployment Script - Backend, Frontend, and PostgreSQL
 DOMAIN="conclusion-nexus.baburek.eu"
 EMAIL="nico_baburek@hotmail.com"
 
-echo "🚀 Starting simple deployment for $DOMAIN..."
+echo "🚀 Starting full deployment for $DOMAIN..."
 
 # Check if we're on the server
 if [ ! -d "/etc/nginx" ]; then
@@ -17,7 +17,8 @@ echo "🧹 Force cleaning up..."
 sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
 sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
 sudo docker network prune -f
-sudo fuser -k 3000/tcp 2>/dev/null || true
+sudo fuser -k 3001/tcp 2>/dev/null || true
+sudo fuser -k 3002/tcp 2>/dev/null || true
 
 # Fix nginx conflicts
 echo "🔧 Fixing nginx conflicts..."
@@ -38,7 +39,7 @@ sudo systemctl enable docker
 # Add user to docker group
 sudo usermod -aG docker $USER
 
-# Create Nginx configuration for single container
+# Create Nginx configuration for full setup
 echo "🔧 Setting up Nginx configuration..."
 sudo tee /etc/nginx/sites-available/$DOMAIN << EOF
 server {
@@ -130,15 +131,6 @@ server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
     }
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-    }
 }
 EOF
 
@@ -146,19 +138,22 @@ EOF
 sudo systemctl reload nginx
 
 # Deploy application
-echo "🐳 Deploying application with Docker..."
+echo "🐳 Deploying full application with backend, frontend, and PostgreSQL..."
 cd ~/apps/conclusion-nexus
 
 # Stop existing containers
 docker-compose down 2>/dev/null || true
 
-# Build and start container
+# Build and start containers
 docker-compose up -d --build
 
-echo "✅ Deployment complete!"
+echo "✅ Full deployment complete!"
 echo "🌐 Your application is now available at: https://$DOMAIN"
 echo ""
 echo "📋 Useful commands:"
 echo "  - View logs: docker-compose logs -f"
+echo "  - Backend logs: docker-compose logs backend"
+echo "  - Frontend logs: docker-compose logs frontend"
+echo "  - PostgreSQL logs: docker-compose logs postgres"
 echo "  - Restart: docker-compose restart"
 echo "  - Stop: docker-compose down" 

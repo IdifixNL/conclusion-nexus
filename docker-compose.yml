@@ -1,18 +1,50 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    container_name: conclusion-nexus-app
+  backend:
+    build: ./backend
+    container_name: conclusion-nexus-backend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - PORT=3002
+      - PORT=3001
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     ports:
-      - "3002:3002"
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: conclusion-nexus-frontend
+    restart: unless-stopped
+    environment:
+      - REACT_APP_API_URL=https://conclusion-nexus.baburek.eu
+    ports:
+      - "3002:3000"
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: conclusion-nexus-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  pgdata: 
