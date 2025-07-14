@@ -118,20 +118,20 @@ EOF
 # Reload Nginx
 sudo systemctl reload nginx
 
-# Deploy application with simple setup
-echo "🐳 Deploying application with simple Docker setup..."
+# Deploy application
+echo "🐳 Deploying application with Docker..."
 cd ~/apps/conclusion-nexus
 
 # Stop existing containers
-docker-compose -f docker-compose.simple.yml down 2>/dev/null || true
+docker-compose down 2>/dev/null || true
 
-# Build and start single container
-docker-compose -f docker-compose.simple.yml up -d --build
+# Build and start container
+docker-compose up -d --build
 
-echo "✅ Simple deployment complete!"
+echo "✅ Deployment complete!"
 echo "🌐 Your application is now available at: https://$DOMAIN"
 echo ""
 echo "📋 Useful commands:"
-echo "  - View logs: docker-compose -f docker-compose.simple.yml logs -f"
-echo "  - Restart: docker-compose -f docker-compose.simple.yml restart"
-echo "  - Stop: docker-compose -f docker-compose.simple.yml down" 
+echo "  - View logs: docker-compose logs -f"
+echo "  - Restart: docker-compose restart"
+echo "  - Stop: docker-compose down" 

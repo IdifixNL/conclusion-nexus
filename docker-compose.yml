@@ -1,35 +1,18 @@
+version: '3.8'
+
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "3001:3001"
+  app:
+    build: .
+    container_name: conclusion-nexus-app
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
-    depends_on:
-      - postgres
-
-  frontend:
-    build: ./frontend
+      - PORT=3000
     ports:
       - "3000:3000"
-
-  postgres:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
 
 networks:
-  default:
-    name: sharednet
-    external: true
-
-volumes:
-  pgdata: 
+  app-network:
+    driver: bridge 
