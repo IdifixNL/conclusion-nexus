@@ -18,7 +18,7 @@ services:
     container_name: conclusion-nexus-frontend
     restart: unless-stopped
     environment:
-      - REACT_APP_API_URL=https://ai-service-desk.baburek.eu
+      - REACT_APP_API_URL=https://conclusion-nexus.baburek.eu
     ports:
       - "3000:3000"
     networks:

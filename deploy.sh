@@ -3,7 +3,7 @@
 # Complete Deployment Script for Conclusion Nexus
 # This script handles deployment with SSL setup
 
-DOMAIN="ai-service-desk.baburek.eu"
+DOMAIN="conclusion-nexus.baburek.eu"
 EMAIL="nico_baburek@hotmail.com"
 
 echo "🚀 Starting deployment for $DOMAIN..."

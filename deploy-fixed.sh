@@ -3,7 +3,7 @@
 # Fixed Deployment Script for Conclusion Nexus
 # This script handles deployment with SSL setup and proper Docker configuration
 
-DOMAIN="ai-service-desk.baburek.eu"
+DOMAIN="conclusion-nexus.baburek.eu"
 EMAIL="nico_baburek@hotmail.com"
 
 echo "🚀 Starting deployment for $DOMAIN..."

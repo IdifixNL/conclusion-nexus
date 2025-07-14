@@ -3,7 +3,7 @@
 # SSL Setup Script for ai-service-desk.baburek.eu
 # This script sets up HTTPS with Let's Encrypt certificates
 
-DOMAIN="ai-service-desk.baburek.eu"
+DOMAIN="conclusion-nexus.baburek.eu"
 EMAIL="nico_baburek@hotmail.com"
 
 echo "Setting up SSL for $DOMAIN..."
