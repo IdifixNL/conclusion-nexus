@@ -199,6 +199,28 @@ app.get('/api/admin/users', authenticateToken, async (req, res) => {
   }
 });
 
+// Add: Admin-only endpoint to update user role
+app.post('/api/admin/users/:id/role', authenticateToken, async (req, res) => {
+  try {
+    // Only allow admins to change roles
+    const adminUserId = req.user.id;
+    const adminUserResult = await pool.query('SELECT role FROM users WHERE id = $1', [adminUserId]);
+    if (!adminUserResult.rows.length || adminUserResult.rows[0].role !== 'admin') {
+      return res.status(403).json({ error: 'Only admins can change user roles' });
+    }
+    const { id } = req.params;
+    const { role } = req.body;
+    if (!['admin', 'user'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+    await pool.query('UPDATE users SET role = $1 WHERE id = $2', [role, id]);
+    res.json({ message: 'User role updated successfully', id, role });
+  } catch (error) {
+    console.error('Update user role error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.post('/api/admin/users/:id/block', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
