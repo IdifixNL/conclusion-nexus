@@ -1,0 +1,29 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ~/apps/conclusion-nexus
+          git pull origin main
+          if [ -f docker-compose.yml ]; then
+            docker-compose down
+            docker-compose up -d --build
+          else
+            # If not using Docker, restart the application
+            npm install
+            pm2 restart conclusion-nexus || pm2 start npm --name "conclusion-nexus" -- start
+          fi 

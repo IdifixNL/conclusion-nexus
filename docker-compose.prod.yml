@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: conclusion-nexus-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: conclusion-nexus-frontend
+    restart: unless-stopped
+    environment:
+      - REACT_APP_API_URL=https://ai-service-desk.baburek.eu
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge 
