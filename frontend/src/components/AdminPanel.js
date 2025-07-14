@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   padding: 2rem;
@@ -149,6 +150,7 @@ const AdminPanel = () => {
     is_active: true
   });
   const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (activeTab === 'users') {
@@ -350,7 +352,28 @@ const AdminPanel = () => {
 
   return (
     <Container>
-      <Title>Admin Panel</Title>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Title>Admin Panel</Title>
+        <button
+          style={{
+            backgroundColor: '#E31E54',
+            color: 'white',
+            border: 'none',
+            padding: '0.5rem 1.25rem',
+            borderRadius: '0.375rem',
+            fontWeight: 500,
+            fontSize: '1rem',
+            cursor: 'pointer',
+            marginLeft: '1rem',
+            marginTop: '0.5rem',
+            marginBottom: '0.5rem',
+            transition: 'background-color 0.2s',
+          }}
+          onClick={() => navigate('/dashboard')}
+        >
+          Back to Dashboard
+        </button>
+      </div>
       
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {success && <SuccessMessage>{success}</SuccessMessage>}
