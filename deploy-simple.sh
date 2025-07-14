@@ -18,6 +18,12 @@ sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
 sudo docker rm -f $(sudo docker ps -aq) 2>/dev/null || true
 sudo docker network prune -f
 sudo fuser -k 3000/tcp 2>/dev/null || true
+
+# Fix nginx conflicts
+echo "🔧 Fixing nginx conflicts..."
+sudo rm -f /etc/nginx/sites-enabled/planka
+sudo rm -f /etc/nginx/sites-enabled/default
+
 sleep 3
 
 # Update system packages
