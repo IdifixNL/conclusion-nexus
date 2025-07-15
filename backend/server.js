@@ -69,7 +69,7 @@ async function initializeDatabase() {
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
-        role_type VARCHAR(100) NOT NULL,
+        role_type VARCHAR(100) NOT NULL UNIQUE,
         webhook_url VARCHAR(500),
         is_active BOOLEAN DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -84,7 +84,7 @@ async function initializeDatabase() {
       ('Azure Engineer', 'Access Azure-specific workflows and automation tools', 'azure_engineer', 'http://localhost:5678/webhook/122742ad-e48e-468a-905d-e7b5b3cd24c6/chat'),
       ('Project Manager', 'Manage projects and track progress with automated workflows', 'project_manager', 'http://localhost:5678/webhook/122742ad-e48e-468a-905d-e7b5b3cd24c6/chat'),
       ('Service Manager', 'Oversee service delivery and customer satisfaction workflows', 'service_manager', 'http://localhost:5678/webhook/122742ad-e48e-468a-905d-e7b5b3cd24c6/chat')
-      ON CONFLICT DO NOTHING
+      ON CONFLICT (role_type) DO NOTHING
     `);
     console.log('DB: Default role cards inserted or already exist.');
 
