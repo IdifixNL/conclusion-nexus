@@ -42,29 +42,6 @@ services:
     networks:
       - app-network
 
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
-    restart: unless-stopped
-    environment:
-      - N8N_DATABASE_TYPE=postgresdb
-      - N8N_DATABASE_POSTGRESDB_HOST=postgres
-      - N8N_DATABASE_POSTGRESDB_PORT=5432
-      - N8N_DATABASE_POSTGRESDB_DATABASE=n8n
-      - N8N_DATABASE_POSTGRESDB_USER=n8n
-      - N8N_DATABASE_POSTGRESDB_PASSWORD=n8n_passwordinhdfd80y32423hnbdfNdsifsp
-      - N8N_DATABASE_POSTGRESDB_SCHEMA=public
-      - N8N_DATABASE_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
-      - N8N_BASIC_AUTH_ACTIVE=false
-      - N8N_PORT=5678
-      - N8N_EXPRESS_TRUST_PROXY=true
-    ports:
-      - "3103:5678"
-    depends_on:
-      - postgres
-    networks:
-      - app-network
-
 networks:
   app-network:
     driver: bridge
