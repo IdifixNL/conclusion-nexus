@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { apiCall } from '../config';
-import BreathingRingBackground from './BreathingRingBackground';
+import NeuralNetworkBackground from './NeuralNetworkBackground';
 
 const Container = styled.div`
   display: flex;
@@ -140,7 +140,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
-      <BreathingRingBackground />
+      <NeuralNetworkBackground />
       <Container>
         <FormContainer>
           <Title>Welcome Back</Title>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import BreathingRingBackground from './BreathingRingBackground';
+import NeuralNetworkBackground from './NeuralNetworkBackground';
 
 const Container = styled.div`
   display: flex;
@@ -268,7 +268,7 @@ const Register = ({ onLogin }) => {
 
   return (
     <>
-      <BreathingRingBackground />
+      <NeuralNetworkBackground />
       <Container>
         <FormContainer>
           <Title>Create Account</Title>
