@@ -176,7 +176,8 @@ const Chat = ({ user }) => {
     };
     setRoleTitle(roleTitles[roleType] || 'Chat');
 
-    const websocket = new WebSocket('ws://localhost:3001');
+    // Use secure WebSocket and /ws endpoint for Nginx proxy
+    const websocket = new WebSocket('wss://conclusion-nexus.baburek.eu/ws');
     
     websocket.onopen = () => {
       console.log('WebSocket connected');
