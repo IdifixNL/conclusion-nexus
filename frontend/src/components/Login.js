@@ -22,6 +22,42 @@ const FormContainer = styled.div`
   max-width: 400px;
 `;
 
+const ProjectName = styled.div`
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  
+  .conclusion {
+    color: #E31E54;
+  }
+  
+  .nexus {
+    color: #E31E54;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .conclusion .letter {
+    display: inline-block;
+  }
+  
+  .conclusion .letter:nth-child(1) { color: #FF6B6B; }
+  .conclusion .letter:nth-child(2) { color: #4ECDC4; }
+  .conclusion .letter:nth-child(3) { color: #45B7D1; }
+  .conclusion .letter:nth-child(4) { color: #96CEB4; }
+  .conclusion .letter:nth-child(5) { color: #FFEAA7; }
+  .conclusion .letter:nth-child(6) { color: #DDA0DD; }
+  .conclusion .letter:nth-child(7) { color: #98D8C8; }
+  .conclusion .letter:nth-child(8) { color: #F7DC6F; }
+  .conclusion .letter:nth-child(9) { color: #BB8FCE; }
+  .conclusion .letter:nth-child(10) { color: #85C1E9; }
+  
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px currentColor; }
+    100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+  }
+`;
+
 const Title = styled.h1`
   text-align: center;
   color: #E31E54;
@@ -143,6 +179,15 @@ const Login = ({ onLogin }) => {
       <NeuralNetworkBackground />
       <Container>
         <FormContainer>
+          <ProjectName>
+            <span className="conclusion">
+              {'Conclusion'.split('').map((letter, index) => (
+                <span key={index} className="letter">{letter}</span>
+              ))}
+            </span>
+            {' '}
+            <span className="nexus">Nexus</span>
+          </ProjectName>
           <Title>Welcome Back</Title>
           <Form onSubmit={handleSubmit}>
             <FormGroup>

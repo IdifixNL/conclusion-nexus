@@ -123,8 +123,8 @@ app.post('/api/register', async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, company_role, your_role, status) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, role, company_role, your_role, status',
-      [email, hashedPassword, company_role, your_role, 'pending']
+      'INSERT INTO users (email, password_hash, company_role, your_role, status, blocked) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email, role, company_role, your_role, status, blocked',
+      [email, hashedPassword, company_role, your_role, 'pending', true]
     );
     const token = jwt.sign({ id: result.rows[0].id, email }, JWT_SECRET);
     res.json({ token, user: { id: result.rows[0].id, email, role: result.rows[0].role, company_role: result.rows[0].company_role, your_role: result.rows[0].your_role, status: result.rows[0].status } });
@@ -153,10 +153,10 @@ app.post('/api/login', async (req, res) => {
     }
     const user = result.rows[0];
     if (user.blocked) {
-      return res.status(403).json({ error: 'Account is blocked', debug: { blocked: true, user } });
+      return res.status(403).json({ error: 'Account is blocked. Please contact an administrator to activate your account.' });
     }
     if (user.status !== 'approved') {
-      return res.status(403).json({ error: 'Account not approved by admin yet', debug: { status: user.status } });
+      return res.status(403).json({ error: 'Account is pending approval. Please contact an administrator to activate your account.' });
     }
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
@@ -235,6 +235,17 @@ app.post('/api/admin/users/:id/unblock', authenticateToken, async (req, res) => 
     res.json({ message: 'User unblocked successfully' });
   } catch (error) {
     console.error('Unblock user error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/admin/users/:id/approve', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('UPDATE users SET status = $1, blocked = false WHERE id = $2', ['approved', id]);
+    res.json({ message: 'User approved successfully' });
+  } catch (error) {
+    console.error('Approve user error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

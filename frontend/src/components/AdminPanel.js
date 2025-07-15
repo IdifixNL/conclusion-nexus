@@ -237,6 +237,26 @@ const AdminPanel = () => {
     }
   };
 
+  const handleApproveUser = async (userId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`/api/admin/users/${userId}/approve`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      setUsers(users.map(user => 
+        user.id === userId ? { ...user, status: 'approved', blocked: false } : user
+      ));
+      setSuccess('User approved successfully');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      setError('Failed to approve user');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
   const handleMakeAdmin = async (userId) => {
     try {
       const token = localStorage.getItem('token');
@@ -441,6 +461,7 @@ const AdminPanel = () => {
                 <Th>Email</Th>
                 <Th>Role</Th>
                 <Th>Status</Th>
+                <Th>Approval</Th>
                 <Th>Actions</Th>
               </tr>
             </thead>
@@ -468,6 +489,20 @@ const AdminPanel = () => {
                     <StatusBadge active={!user.blocked}>
                       {user.blocked ? 'Blocked' : 'Active'}
                     </StatusBadge>
+                  </Td>
+                  <Td>
+                    <StatusBadge active={user.status === 'approved'}>
+                      {user.status === 'approved' ? 'Approved' : 'Pending'}
+                    </StatusBadge>
+                  </Td>
+                  <Td>
+                    {user.status !== 'approved' ? (
+                      <ActionButton onClick={() => handleApproveUser(user.id)}>
+                        Approve
+                      </ActionButton>
+                    ) : (
+                      <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>Already Approved</span>
+                    )}
                   </Td>
                   <Td>
                     {user.blocked ? (

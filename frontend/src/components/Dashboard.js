@@ -166,9 +166,9 @@ const Dashboard = ({ user }) => {
 
   return (
     <Container>
-      <Title>Welcome to Conclusion Service Portal</Title>
+      <Title>Welcome to Conclusion Nexus</Title>
       <Subtitle>
-        Select a role to access specialized workflows and automation tools
+        Select a specialized AI agent to assist you with your work
       </Subtitle>
       <CardsGrid>
         {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values()).map((card) => (

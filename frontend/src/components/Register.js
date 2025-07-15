@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import NeuralNetworkBackground from './NeuralNetworkBackground';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
 const Container = styled.div`
   display: flex;
@@ -19,6 +20,42 @@ const FormContainer = styled.div`
   border: 2px solid #E31E54;
   width: 100%;
   max-width: 400px;
+`;
+
+const ProjectName = styled.div`
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  
+  .conclusion {
+    color: #E31E54;
+  }
+  
+  .nexus {
+    color: #E31E54;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .conclusion .letter {
+    display: inline-block;
+  }
+  
+  .conclusion .letter:nth-child(1) { color: #FF6B6B; }
+  .conclusion .letter:nth-child(2) { color: #4ECDC4; }
+  .conclusion .letter:nth-child(3) { color: #45B7D1; }
+  .conclusion .letter:nth-child(4) { color: #96CEB4; }
+  .conclusion .letter:nth-child(5) { color: #FFEAA7; }
+  .conclusion .letter:nth-child(6) { color: #DDA0DD; }
+  .conclusion .letter:nth-child(7) { color: #98D8C8; }
+  .conclusion .letter:nth-child(8) { color: #F7DC6F; }
+  .conclusion .letter:nth-child(9) { color: #BB8FCE; }
+  .conclusion .letter:nth-child(10) { color: #85C1E9; }
+  
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px currentColor; }
+    100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+  }
 `;
 
 const Title = styled.h1`
@@ -146,6 +183,7 @@ const DropdownItem = styled.li`
 `;
 
 const Register = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -158,6 +196,7 @@ const Register = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [showPasswordStrength, setShowPasswordStrength] = useState(false);
   const dropdownRef = useRef(null);
 
   // Conclusion companies data
@@ -234,6 +273,16 @@ const Register = ({ onLogin }) => {
     };
   }, []);
 
+  const validatePassword = (password) => {
+    const requirements = [
+      password.length >= 10,
+      (password.match(/[A-Z]/g) || []).length >= 2,
+      (password.match(/[0-9]/g) || []).length >= 2,
+      (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= 2
+    ];
+    return requirements.every(req => req);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -246,6 +295,12 @@ const Register = ({ onLogin }) => {
       return;
     }
 
+    if (!validatePassword(formData.password)) {
+      setError('Password does not meet all requirements');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post('/api/register', {
         email: formData.email,
@@ -254,11 +309,8 @@ const Register = ({ onLogin }) => {
         your_role: formData.your_role
       });
 
-      setSuccess('Registration successful! You can now log in.');
-      setFormData({ email: '', password: '', confirmPassword: '', company_role: 'Conclusion Enablement', your_role: '' });
-      
-      // Auto-login after successful registration
-      onLogin(response.data.user, response.data.token);
+      // Redirect to success page instead of auto-login
+      navigate('/registration-success');
     } catch (error) {
       setError(error.response?.data?.error || 'Registration failed');
     } finally {
@@ -271,6 +323,15 @@ const Register = ({ onLogin }) => {
       <NeuralNetworkBackground />
       <Container>
         <FormContainer>
+          <ProjectName>
+            <span className="conclusion">
+              {'Conclusion'.split('').map((letter, index) => (
+                <span key={index} className="letter">{letter}</span>
+              ))}
+            </span>
+            {' '}
+            <span className="nexus">Nexus</span>
+          </ProjectName>
           <Title>Create Account</Title>
           <Form onSubmit={handleSubmit}>
             <FormGroup>
@@ -293,8 +354,13 @@ const Register = ({ onLogin }) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                onFocus={() => setShowPasswordStrength(true)}
+                onBlur={() => setShowPasswordStrength(false)}
                 required
               />
+              {showPasswordStrength && formData.password && (
+                <PasswordStrengthIndicator password={formData.password} />
+              )}
             </FormGroup>
             
             <FormGroup>
@@ -306,7 +372,26 @@ const Register = ({ onLogin }) => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
+                style={{
+                  borderColor: formData.confirmPassword && formData.password !== formData.confirmPassword ? '#EF4444' : 
+                               formData.confirmPassword && formData.password === formData.confirmPassword ? '#10B981' : '#374151'
+                }}
               />
+              {formData.confirmPassword && (
+                <div style={{
+                  marginTop: '0.5rem',
+                  fontSize: '0.875rem',
+                  color: formData.password === formData.confirmPassword ? '#10B981' : '#EF4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <span style={{ fontWeight: 'bold' }}>
+                    {formData.password === formData.confirmPassword ? '✓' : '✗'}
+                  </span>
+                  {formData.password === formData.confirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                </div>
+              )}
             </FormGroup>
             
             <FormGroup>

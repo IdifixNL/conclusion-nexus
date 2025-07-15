@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import ReactMarkdown from 'react-markdown';
 
 const Container = styled.div`
   display: flex;
@@ -138,6 +139,71 @@ const ConnectionStatus = styled.div`
   border-bottom: 1px solid #374151;
 `;
 
+const MarkdownContent = styled.div`
+  color: white;
+  line-height: 1.6;
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #E31E54;
+    margin: 1rem 0 0.5rem 0;
+    font-weight: bold;
+  }
+  
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+  
+  p {
+    margin: 0.5rem 0;
+  }
+  
+  ul, ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  li {
+    margin: 0.25rem 0;
+  }
+  
+  strong, b {
+    font-weight: bold;
+    color: #E31E54;
+  }
+  
+  code {
+    background-color: #374151;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+  }
+  
+  pre {
+    background-color: #111827;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+  }
+  
+  pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+`;
+
+const DocumentBlock = styled.div`
+  background-color: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  max-width: none;
+  align-self: stretch;
+`;
+
 const Chat = ({ user }) => {
   const { roleType } = useParams();
   const navigate = useNavigate();
@@ -263,12 +329,23 @@ const Chat = ({ user }) => {
         
         <MessagesContainer>
           {messages.map((message) => (
-            <Message key={message.id} isUser={message.isUser}>
-              <div>{message.text}</div>
-              <MessageTime>
-                {message.timestamp.toLocaleTimeString()}
-              </MessageTime>
-            </Message>
+            message.isUser ? (
+              <Message key={message.id} isUser={true}>
+                <div>{message.text}</div>
+                <MessageTime>
+                  {message.timestamp.toLocaleTimeString()}
+                </MessageTime>
+              </Message>
+            ) : (
+              <DocumentBlock key={message.id}>
+                <MarkdownContent>
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
+                </MarkdownContent>
+                <MessageTime>
+                  {message.timestamp.toLocaleTimeString()}
+                </MessageTime>
+              </DocumentBlock>
+            )
           ))}
           <div ref={messagesEndRef} />
         </MessagesContainer>

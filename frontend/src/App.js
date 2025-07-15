@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import Chat from './components/Chat';
 import AdminPanel from './components/AdminPanel';
 import Header from './components/Header';
+import RegistrationSuccess from './components/RegistrationSuccess';
 
 // Minimal Executive Blue theme
 const colors = {
@@ -78,6 +79,14 @@ function App() {
                 <Register onLogin={handleLogin} />
               </AuthContainer>
             )
+          } 
+        />
+        <Route 
+          path="/registration-success" 
+          element={
+            <AuthContainer>
+              <RegistrationSuccess />
+            </AuthContainer>
           } 
         />
         <Route 
