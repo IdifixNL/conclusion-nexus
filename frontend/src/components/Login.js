@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { apiCall } from '../config';
 import NeuralNetworkBackground from './NeuralNetworkBackground';
+import WelcomeOverlay from './WelcomeOverlay';
 
 const Container = styled.div`
   display: flex;
@@ -141,6 +142,23 @@ const LinkText = styled.div`
   }
 `;
 
+const InfoButton = styled.button`
+  background: transparent;
+  color: #9CA3AF;
+  border: 1px solid #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+  
+  &:hover {
+    color: #E31E54;
+    border-color: #E31E54;
+  }
+`;
+
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
@@ -148,6 +166,20 @@ const Login = ({ onLogin }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  useEffect(() => {
+    // Show overlay on first visit (check if user has seen it before)
+    const hasSeenOverlay = localStorage.getItem('hasSeenWelcomeOverlay');
+    if (!hasSeenOverlay) {
+      setShowOverlay(true);
+    }
+  }, []);
+
+  const handleCloseOverlay = () => {
+    setShowOverlay(false);
+    localStorage.setItem('hasSeenWelcomeOverlay', 'true');
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -178,55 +210,59 @@ const Login = ({ onLogin }) => {
   return (
     <>
       <NeuralNetworkBackground />
-    <Container>
-      <FormContainer>
-          <ProjectName>
-            <span className="conclusion">
-              {'Conclusion'.split('').map((letter, index) => (
-                <span key={index} className="letter">{letter}</span>
-              ))}
-            </span>
-            {' '}
-            <span className="nexus">Nexus</span>
-          </ProjectName>
-        <Title>Welcome Back</Title>
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
+      {showOverlay && <WelcomeOverlay onClose={handleCloseOverlay} />}
+      <Container>
+        <FormContainer>
+            <ProjectName>
+              <span className="conclusion">
+                {'Conclusion'.split('').map((letter, index) => (
+                  <span key={index} className="letter">{letter}</span>
+                ))}
+              </span>
+              {' '}
+              <span className="nexus">Nexus</span>
+            </ProjectName>
+          <Title>Welcome Back</Title>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </Button>
+          </Form>
           
-          <FormGroup>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
-          </Button>
-        </Form>
-        
-        <LinkText>
-          Don't have an account? <Link to="/register">Register</Link>
-        </LinkText>
-      </FormContainer>
-    </Container>
+          <LinkText>
+            Don't have an account? <Link to="/register">Register</Link>
+          </LinkText>
+          <InfoButton onClick={() => setShowOverlay(true)}>
+            ℹ️ About Conclusion Nexus
+          </InfoButton>
+        </FormContainer>
+      </Container>
     </>
   );
 };
