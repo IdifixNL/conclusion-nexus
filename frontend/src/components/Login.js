@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { apiCall } from '../config';
+import BreathingRingBackground from './BreathingRingBackground';
 
 const Container = styled.div`
   display: flex;
@@ -138,46 +139,49 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <Container>
-      <FormContainer>
-        <Title>Welcome Back</Title>
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
+    <>
+      <BreathingRingBackground />
+      <Container>
+        <FormContainer>
+          <Title>Welcome Back</Title>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </Button>
+          </Form>
           
-          <FormGroup>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
-          </Button>
-        </Form>
-        
-        <LinkText>
-          Don't have an account? <Link to="/register">Register</Link>
-        </LinkText>
-      </FormContainer>
-    </Container>
+          <LinkText>
+            Don't have an account? <Link to="/register">Register</Link>
+          </LinkText>
+        </FormContainer>
+      </Container>
+    </>
   );
 };
 

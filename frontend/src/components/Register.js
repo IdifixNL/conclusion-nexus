@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import BreathingRingBackground from './BreathingRingBackground';
 
 const Container = styled.div`
   display: flex;
@@ -266,100 +267,103 @@ const Register = ({ onLogin }) => {
   };
 
   return (
-    <Container>
-      <FormContainer>
-        <Title>Create Account</Title>
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          <FormGroup>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          <FormGroup>
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          <FormGroup>
-            <Label htmlFor="company_role">Conclusion Label</Label>
-            <DropdownContainer ref={dropdownRef}>
+    <>
+      <BreathingRingBackground />
+      <Container>
+        <FormContainer>
+          <Title>Create Account</Title>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="company_role">Conclusion Label</Label>
+              <DropdownContainer ref={dropdownRef}>
+                <Input
+                  type="text"
+                  id="company_role"
+                  name="company_role"
+                  value={formData.company_role}
+                  onChange={handleChange}
+                  placeholder="Select or type a Conclusion company"
+                  required
+                  autoComplete="off"
+                />
+                {showDropdown && (
+                  <DropdownList>
+                    {filteredCompanies.map((company, index) => (
+                      <DropdownItem
+                        key={index}
+                        onClick={() => handleCompanySelect(company)}
+                      >
+                        {company}
+                      </DropdownItem>
+                    ))}
+                  </DropdownList>
+                )}
+              </DropdownContainer>
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="your_role">Your Role</Label>
               <Input
                 type="text"
-                id="company_role"
-                name="company_role"
-                value={formData.company_role}
+                id="your_role"
+                name="your_role"
+                value={formData.your_role}
                 onChange={handleChange}
-                placeholder="Select or type a Conclusion company"
+                placeholder="e.g., Service Manager, Azure Platform Engineer, Developer"
                 required
-                autoComplete="off"
               />
-              {showDropdown && (
-                <DropdownList>
-                  {filteredCompanies.map((company, index) => (
-                    <DropdownItem
-                      key={index}
-                      onClick={() => handleCompanySelect(company)}
-                    >
-                      {company}
-                    </DropdownItem>
-                  ))}
-                </DropdownList>
-              )}
-            </DropdownContainer>
-          </FormGroup>
+            </FormGroup>
+            
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {success && <SuccessMessage>{success}</SuccessMessage>}
+            
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </Button>
+          </Form>
           
-          <FormGroup>
-            <Label htmlFor="your_role">Your Role</Label>
-            <Input
-              type="text"
-              id="your_role"
-              name="your_role"
-              value={formData.your_role}
-              onChange={handleChange}
-              placeholder="e.g., Service Manager, Azure Platform Engineer, Developer"
-              required
-            />
-          </FormGroup>
-          
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          {success && <SuccessMessage>{success}</SuccessMessage>}
-          
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </Button>
-        </Form>
-        
-        <LinkText>
-          Already have an account? <Link to="/login">Log in</Link>
-        </LinkText>
-      </FormContainer>
-    </Container>
+          <LinkText>
+            Already have an account? <Link to="/login">Log in</Link>
+          </LinkText>
+        </FormContainer>
+      </Container>
+    </>
   );
 };
 
