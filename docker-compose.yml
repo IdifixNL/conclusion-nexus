@@ -23,7 +23,7 @@ services:
     environment:
       - REACT_APP_API_URL=http://localhost:3101
     ports:
-      - "3100:3000"
+      - "3110:3000"
     networks:
       - app-network
 
