@@ -305,7 +305,7 @@ const Register = ({ onLogin }) => {
           </FormGroup>
           
           <FormGroup>
-            <Label htmlFor="company_role">Company Role</Label>
+            <Label htmlFor="company_role">Conclusion Label</Label>
             <DropdownContainer ref={dropdownRef}>
               <Input
                 type="text"
