@@ -40,6 +40,8 @@ async function initializeDatabase() {
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         role VARCHAR(100) DEFAULT 'user',
+        company_role VARCHAR(255),
+        your_role VARCHAR(255),
         status VARCHAR(50) DEFAULT 'active',
         blocked BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -47,20 +49,14 @@ async function initializeDatabase() {
     `);
     console.log('DB: Users table created or already exists.');
 
-    // Drop and recreate the table to ensure correct structure
-    // await pool.query('DROP TABLE IF EXISTS users CASCADE');
-    console.log('DB: Creating users table again (redundant, should be removed)...');
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        role VARCHAR(100) DEFAULT 'user',
-        status VARCHAR(50) DEFAULT 'active',
-        blocked BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    // Add missing columns if they don't exist
+    try {
+      await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS company_role VARCHAR(255)');
+      await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS your_role VARCHAR(255)');
+      console.log('DB: Added missing columns to users table.');
+    } catch (error) {
+      console.log('DB: Columns already exist or error adding columns:', error.message);
+    }
     console.log('DB: Users table (redundant) created or already exists.');
 
     console.log('DB: Creating role_cards table...');
@@ -121,17 +117,17 @@ app.get('/api/health', (req, res) => {
 // Routes
 app.post('/api/register', async (req, res) => {
   try {
-    const { email, password, company_role } = req.body;
-    if (!email || !password || !company_role) {
-      return res.status(400).json({ error: 'Email, password, and company role are required' });
+    const { email, password, company_role, your_role } = req.body;
+    if (!email || !password || !company_role || !your_role) {
+      return res.status(400).json({ error: 'Email, password, company role, and your role are required' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, company_role, status) VALUES ($1, $2, $3, $4) RETURNING id, email, role, company_role, status',
-      [email, hashedPassword, company_role, 'pending']
+      'INSERT INTO users (email, password_hash, company_role, your_role, status) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, role, company_role, your_role, status',
+      [email, hashedPassword, company_role, your_role, 'pending']
     );
     const token = jwt.sign({ id: result.rows[0].id, email }, JWT_SECRET);
-    res.json({ token, user: { id: result.rows[0].id, email, role: result.rows[0].role, company_role: result.rows[0].company_role, status: result.rows[0].status } });
+    res.json({ token, user: { id: result.rows[0].id, email, role: result.rows[0].role, company_role: result.rows[0].company_role, your_role: result.rows[0].your_role, status: result.rows[0].status } });
   } catch (error) {
     if (error.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });

@@ -149,7 +149,8 @@ const Register = ({ onLogin }) => {
     email: '',
     password: '',
     confirmPassword: '',
-    company_role: 'Conclusion Enablement'
+    company_role: 'Conclusion Enablement',
+    your_role: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -248,11 +249,12 @@ const Register = ({ onLogin }) => {
       const response = await axios.post('/api/register', {
         email: formData.email,
         password: formData.password,
-        company_role: formData.company_role
+        company_role: formData.company_role,
+        your_role: formData.your_role
       });
 
       setSuccess('Registration successful! You can now log in.');
-      setFormData({ email: '', password: '', confirmPassword: '', company_role: 'Conclusion Enablement' });
+      setFormData({ email: '', password: '', confirmPassword: '', company_role: 'Conclusion Enablement', your_role: '' });
       
       // Auto-login after successful registration
       onLogin(response.data.user, response.data.token);
@@ -330,6 +332,19 @@ const Register = ({ onLogin }) => {
                 </DropdownList>
               )}
             </DropdownContainer>
+          </FormGroup>
+          
+          <FormGroup>
+            <Label htmlFor="your_role">Your Role</Label>
+            <Input
+              type="text"
+              id="your_role"
+              name="your_role"
+              value={formData.your_role}
+              onChange={handleChange}
+              placeholder="e.g., Service Manager, Azure Platform Engineer, Developer"
+              required
+            />
           </FormGroup>
           
           {error && <ErrorMessage>{error}</ErrorMessage>}
