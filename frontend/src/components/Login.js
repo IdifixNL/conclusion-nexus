@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { apiCall } from '../config';
 
 const Container = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ const Login = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/login', {
+      const response = await axios.post(apiCall('/api/login'), {
         email: formData.email,
         password: formData.password
       });
