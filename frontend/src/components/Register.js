@@ -11,6 +11,7 @@ const Container = styled.div`
   align-items: center;
   min-height: calc(100vh - 80px);
   padding: 2rem;
+  padding-bottom: 6rem;
 `;
 
 const FormContainer = styled.div`
@@ -308,7 +309,7 @@ const Register = ({ onLogin }) => {
         company_role: formData.company_role,
         your_role: formData.your_role
       });
-
+      
       // Redirect to success page instead of auto-login
       navigate('/registration-success');
     } catch (error) {
@@ -321,8 +322,8 @@ const Register = ({ onLogin }) => {
   return (
     <>
       <NeuralNetworkBackground />
-      <Container>
-        <FormContainer>
+    <Container>
+      <FormContainer>
           <ProjectName>
             <span className="conclusion">
               {'Conclusion'.split('').map((letter, index) => (
@@ -332,46 +333,46 @@ const Register = ({ onLogin }) => {
             {' '}
             <span className="nexus">Nexus</span>
           </ProjectName>
-          <Title>Create Account</Title>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </FormGroup>
-            
-            <FormGroup>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
+        <Title>Create Account</Title>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </FormGroup>
+          
+          <FormGroup>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
                 onFocus={() => setShowPasswordStrength(true)}
                 onBlur={() => setShowPasswordStrength(false)}
-                required
-              />
+              required
+            />
               {showPasswordStrength && formData.password && (
                 <PasswordStrengthIndicator password={formData.password} />
               )}
-            </FormGroup>
-            
-            <FormGroup>
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
+          </FormGroup>
+          
+          <FormGroup>
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
                 style={{
                   borderColor: formData.confirmPassword && formData.password !== formData.confirmPassword ? '#EF4444' : 
                                formData.confirmPassword && formData.password === formData.confirmPassword ? '#10B981' : '#374151'
@@ -432,22 +433,22 @@ const Register = ({ onLogin }) => {
                 onChange={handleChange}
                 placeholder="e.g., Service Manager, Azure Platform Engineer, Developer"
                 required
-              />
-            </FormGroup>
-            
-            {error && <ErrorMessage>{error}</ErrorMessage>}
-            {success && <SuccessMessage>{success}</SuccessMessage>}
-            
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </Button>
-          </Form>
+            />
+          </FormGroup>
           
-          <LinkText>
-            Already have an account? <Link to="/login">Log in</Link>
-          </LinkText>
-        </FormContainer>
-      </Container>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {success && <SuccessMessage>{success}</SuccessMessage>}
+          
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
+          </Button>
+        </Form>
+        
+        <LinkText>
+          Already have an account? <Link to="/login">Log in</Link>
+        </LinkText>
+      </FormContainer>
+    </Container>
     </>
   );
 };

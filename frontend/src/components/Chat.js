@@ -331,11 +331,11 @@ const Chat = ({ user }) => {
           {messages.map((message) => (
             message.isUser ? (
               <Message key={message.id} isUser={true}>
-                <div>{message.text}</div>
-                <MessageTime>
-                  {message.timestamp.toLocaleTimeString()}
-                </MessageTime>
-              </Message>
+              <div>{message.text}</div>
+              <MessageTime>
+                {message.timestamp.toLocaleTimeString()}
+              </MessageTime>
+            </Message>
             ) : (
               <DocumentBlock key={message.id}>
                 <MarkdownContent>

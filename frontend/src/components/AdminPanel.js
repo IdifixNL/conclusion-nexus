@@ -412,7 +412,7 @@ const AdminPanel = () => {
   return (
     <Container>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Title>Admin Panel</Title>
+      <Title>Admin Panel</Title>
         <button
           style={{
             backgroundColor: '#E31E54',
@@ -592,9 +592,9 @@ const AdminPanel = () => {
                         </>
                       ) : (
                         <>
-                          <ActionButton onClick={() => handleEditCardClick(card)}>
-                            Edit
-                          </ActionButton>
+                        <ActionButton onClick={() => handleEditCardClick(card)}>
+                          Edit
+                        </ActionButton>
                           <ActionButton onClick={() => handleToggleCard(card.id)}>
                             {card.is_active ? 'Disable' : 'Enable'}
                           </ActionButton>

@@ -11,6 +11,7 @@ const Container = styled.div`
   align-items: center;
   min-height: calc(100vh - 80px);
   padding: 2rem;
+  padding-bottom: 6rem;
 `;
 
 const FormContainer = styled.div`
@@ -177,8 +178,8 @@ const Login = ({ onLogin }) => {
   return (
     <>
       <NeuralNetworkBackground />
-      <Container>
-        <FormContainer>
+    <Container>
+      <FormContainer>
           <ProjectName>
             <span className="conclusion">
               {'Conclusion'.split('').map((letter, index) => (
@@ -188,44 +189,44 @@ const Login = ({ onLogin }) => {
             {' '}
             <span className="nexus">Nexus</span>
           </ProjectName>
-          <Title>Welcome Back</Title>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </FormGroup>
-            
-            <FormGroup>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </FormGroup>
-            
-            {error && <ErrorMessage>{error}</ErrorMessage>}
-            
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </Form>
+        <Title>Welcome Back</Title>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </FormGroup>
           
-          <LinkText>
-            Don't have an account? <Link to="/register">Register</Link>
-          </LinkText>
-        </FormContainer>
-      </Container>
+          <FormGroup>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </FormGroup>
+          
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </Button>
+        </Form>
+        
+        <LinkText>
+          Don't have an account? <Link to="/register">Register</Link>
+        </LinkText>
+      </FormContainer>
+    </Container>
     </>
   );
 };

@@ -70,9 +70,9 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route 
-          path="/register" 
+          <Routes>
+            <Route 
+              path="/register" 
           element={
             user ? <Navigate to="/dashboard" /> : (
               <AuthContainer>
@@ -88,9 +88,9 @@ function App() {
               <RegistrationSuccess />
             </AuthContainer>
           } 
-        />
-        <Route 
-          path="/login" 
+            />
+            <Route 
+              path="/login" 
           element={
             user ? <Navigate to="/dashboard" /> : (
               <AuthContainer>
@@ -98,9 +98,9 @@ function App() {
               </AuthContainer>
             )
           } 
-        />
-        <Route 
-          path="/dashboard" 
+            />
+            <Route 
+              path="/dashboard" 
           element={
             <AppContainer>
               <Header user={user} onLogout={handleLogout} />
@@ -109,9 +109,9 @@ function App() {
               </MainContent>
             </AppContainer>
           } 
-        />
-        <Route 
-          path="/chat/:roleType" 
+            />
+            <Route 
+              path="/chat/:roleType" 
           element={
             <AppContainer>
               <Header user={user} onLogout={handleLogout} />
@@ -120,9 +120,9 @@ function App() {
               </MainContent>
             </AppContainer>
           } 
-        />
-        <Route 
-          path="/admin" 
+            />
+            <Route 
+              path="/admin" 
           element={
             <AppContainer>
               <Header user={user} onLogout={handleLogout} />
@@ -131,12 +131,12 @@ function App() {
               </MainContent>
             </AppContainer>
           } 
-        />
-        <Route 
-          path="/" 
-          element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
-        />
-      </Routes>
+            />
+            <Route 
+              path="/" 
+              element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
+            />
+          </Routes>
     </Router>
   );
 }
