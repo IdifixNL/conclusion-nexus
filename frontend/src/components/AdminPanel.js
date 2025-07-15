@@ -341,6 +341,45 @@ const AdminPanel = () => {
     setEditingCardId(null);
   };
 
+  const handleToggleCard = async (cardId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`/api/admin/role-cards/${cardId}/toggle`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setRoleCards(roleCards.map(card => 
+        card.id === cardId ? response.data : card
+      ));
+      setSuccess(`Role card ${response.data.is_active ? 'enabled' : 'disabled'} successfully`);
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      setError('Failed to toggle role card');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
+  const handleDeleteCard = async (cardId) => {
+    if (!window.confirm('Are you sure you want to delete this role card? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/admin/role-cards/${cardId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setRoleCards(roleCards.filter(card => card.id !== cardId));
+      setSuccess('Role card deleted successfully');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      setError('Failed to delete role card');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
   if (loading) {
     return (
       <Container>
@@ -517,9 +556,17 @@ const AdminPanel = () => {
                           <ActionButton type="button" onClick={handleEditCardCancel}>Cancel</ActionButton>
                         </>
                       ) : (
-                        <ActionButton onClick={() => handleEditCardClick(card)}>
-                          Edit
-                        </ActionButton>
+                        <>
+                          <ActionButton onClick={() => handleEditCardClick(card)}>
+                            Edit
+                          </ActionButton>
+                          <ActionButton onClick={() => handleToggleCard(card.id)}>
+                            {card.is_active ? 'Disable' : 'Enable'}
+                          </ActionButton>
+                          <ActionButton block onClick={() => handleDeleteCard(card.id)}>
+                            Delete
+                          </ActionButton>
+                        </>
                       )}
                     </Td>
                   </tr>

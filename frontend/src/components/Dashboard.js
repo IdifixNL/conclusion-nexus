@@ -42,22 +42,35 @@ const CardsGrid = styled.div`
 `;
 
 const Card = styled.div`
-  background: #f3f4f6; /* Slightly darker than white for subtle contrast */
-  border: 1px solid #dee2e6;
+  background: ${props => props.disabled ? '#f8f9fa' : '#f3f4f6'};
+  border: 1px solid ${props => props.disabled ? '#e5e7eb' : '#dee2e6'};
   border-radius: 1.25rem;
   padding: 2.25rem 2rem 2rem 2rem;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
   transition: box-shadow 0.25s, border-color 0.2s, transform 0.2s;
   position: relative;
   box-shadow: 0 2px 8px 0 rgba(0,40,85,0.04);
   display: flex;
   flex-direction: column;
   min-height: 260px;
+  opacity: ${props => props.disabled ? 0.6 : 1};
   &:hover {
-    border-color: #002855;
-    box-shadow: 0 8px 24px 0 rgba(0,40,85,0.10);
-    transform: translateY(-2px) scale(1.015);
+    border-color: ${props => props.disabled ? '#e5e7eb' : '#002855'};
+    box-shadow: ${props => props.disabled ? '0 2px 8px 0 rgba(0,40,85,0.04)' : '0 8px 24px 0 rgba(0,40,85,0.10)'};
+    transform: ${props => props.disabled ? 'none' : 'translateY(-2px) scale(1.015)'};
   }
+`;
+
+const DisabledBadge = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #6b7280;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
 `;
 
 const CardTitle = styled.h3`
@@ -159,11 +172,16 @@ const Dashboard = ({ user }) => {
       </Subtitle>
       <CardsGrid>
         {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values()).map((card) => (
-          <Card key={card.role_type} onClick={() => handleCardClick(card.role_type)}>
+          <Card 
+            key={card.role_type} 
+            disabled={!card.is_active}
+            onClick={() => card.is_active && handleCardClick(card.role_type)}
+          >
+            {!card.is_active && <DisabledBadge>Disabled</DisabledBadge>}
             <CardTitle>{card.title}</CardTitle>
             <CardDescription>{card.description}</CardDescription>
-            <CardButton>
-              Start Chat
+            <CardButton disabled={!card.is_active}>
+              {card.is_active ? 'Start Chat' : 'Unavailable'}
             </CardButton>
           </Card>
         ))}

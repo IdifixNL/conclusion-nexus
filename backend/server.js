@@ -285,6 +285,31 @@ app.put('/api/admin/role-cards/:id', authenticateToken, async (req, res) => {
   }
 });
 
+app.post('/api/admin/role-cards/:id/toggle', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'UPDATE role_cards SET is_active = NOT is_active WHERE id = $1 RETURNING *',
+      [id]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Toggle role card error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/admin/role-cards/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM role_cards WHERE id = $1', [id]);
+    res.json({ message: 'Role card deleted successfully' });
+  } catch (error) {
+    console.error('Delete role card error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // WebSocket connection for chat
 wss.on('connection', (ws) => {
   console.log('New WebSocket connection');
