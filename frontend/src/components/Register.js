@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -108,23 +108,129 @@ const LinkText = styled.div`
   }
 `;
 
+const DropdownContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const DropdownList = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.375rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+const DropdownItem = styled.li`
+  padding: 0.75rem;
+  cursor: pointer;
+  color: white;
+  border-bottom: 1px solid #374151;
+  
+  &:hover {
+    background-color: #374151;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
 const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
-    company_role: ''
+    company_role: 'Conclusion Enablement'
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const dropdownRef = useRef(null);
+
+  // Conclusion companies data
+  const conclusionCompanies = [
+    'Conclusion Enablement',
+    'Conclusion Data',
+    'Conclusion Learning',
+    'Conclusion AFAS',
+    'Conclusion AI',
+    'Conclusion Development',
+    'Conclusion Strategy',
+    'Conclusion Security',
+    'Conclusion Cloud',
+    'Conclusion Design',
+    'Conclusion Mobility',
+    'Conclusion Integration',
+    'Conclusion Innovation',
+    'Conclusion Mendix',
+    'Conclusion Dynamics',
+    'Conclusion Critical IT',
+    'Conclusion Sourcing',
+    'Conclusion Healthcare',
+    'Conclusion Java',
+    'Conclusion Healthcare IT',
+    'Conclusion BI',
+    'Conclusion Project Management',
+    'Conclusion Public',
+    'Conclusion SAP',
+    'Conclusion Financial'
+  ];
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Handle company role autocomplete
+    if (name === 'company_role') {
+      if (value.trim() === '') {
+        setFilteredCompanies([]);
+        setShowDropdown(false);
+      } else {
+        const filtered = conclusionCompanies.filter(company =>
+          company.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredCompanies(filtered);
+        setShowDropdown(filtered.length > 0);
+      }
+    }
   };
+
+  const handleCompanySelect = (company) => {
+    setFormData({
+      ...formData,
+      company_role: company
+    });
+    setShowDropdown(false);
+    setFilteredCompanies([]);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,7 +252,7 @@ const Register = ({ onLogin }) => {
       });
 
       setSuccess('Registration successful! You can now log in.');
-      setFormData({ email: '', password: '', confirmPassword: '', company_role: '' });
+      setFormData({ email: '', password: '', confirmPassword: '', company_role: 'Conclusion Enablement' });
       
       // Auto-login after successful registration
       onLogin(response.data.user, response.data.token);
@@ -200,15 +306,30 @@ const Register = ({ onLogin }) => {
           
           <FormGroup>
             <Label htmlFor="company_role">Company Role</Label>
-            <Input
-              type="text"
-              id="company_role"
-              name="company_role"
-              value={formData.company_role}
-              onChange={handleChange}
-              placeholder="e.g., Developer, Manager, Engineer"
-              required
-            />
+            <DropdownContainer ref={dropdownRef}>
+              <Input
+                type="text"
+                id="company_role"
+                name="company_role"
+                value={formData.company_role}
+                onChange={handleChange}
+                placeholder="Select or type a Conclusion company"
+                required
+                autoComplete="off"
+              />
+              {showDropdown && (
+                <DropdownList>
+                  {filteredCompanies.map((company, index) => (
+                    <DropdownItem
+                      key={index}
+                      onClick={() => handleCompanySelect(company)}
+                    >
+                      {company}
+                    </DropdownItem>
+                  ))}
+                </DropdownList>
+              )}
+            </DropdownContainer>
           </FormGroup>
           
           {error && <ErrorMessage>{error}</ErrorMessage>}
