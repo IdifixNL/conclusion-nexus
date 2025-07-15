@@ -112,7 +112,8 @@ const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    company_role: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -140,11 +141,12 @@ const Register = ({ onLogin }) => {
     try {
       const response = await axios.post('/api/register', {
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        company_role: formData.company_role
       });
 
       setSuccess('Registration successful! You can now log in.');
-      setFormData({ email: '', password: '', confirmPassword: '' });
+      setFormData({ email: '', password: '', confirmPassword: '', company_role: '' });
       
       // Auto-login after successful registration
       onLogin(response.data.user, response.data.token);
@@ -192,6 +194,19 @@ const Register = ({ onLogin }) => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
+              required
+            />
+          </FormGroup>
+          
+          <FormGroup>
+            <Label htmlFor="company_role">Company Role</Label>
+            <Input
+              type="text"
+              id="company_role"
+              name="company_role"
+              value={formData.company_role}
+              onChange={handleChange}
+              placeholder="e.g., Developer, Manager, Engineer"
               required
             />
           </FormGroup>
