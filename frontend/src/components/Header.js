@@ -34,6 +34,7 @@ const Logo = styled.div`
     color: #D72638;
     margin-left: 0.25rem;
     font-weight: bold;
+    animation: glow 2s ease-in-out infinite alternate;
   }
   .slogan {
     font-size: 1rem;
@@ -44,6 +45,11 @@ const Logo = styled.div`
     letter-spacing: 0.02em;
     opacity: 0.92;
     white-space: nowrap;
+  }
+  
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px currentColor; }
+    100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
   }
 `;
 

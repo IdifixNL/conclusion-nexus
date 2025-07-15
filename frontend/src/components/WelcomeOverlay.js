@@ -54,7 +54,7 @@ const ContactSection = styled.div`
   border: 1px solid rgba(227, 30, 84, 0.3);
   border-radius: 0.5rem;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 
 const ContactTitle = styled.h3`
@@ -83,6 +83,45 @@ const ContactLink = styled.a`
   &:hover {
     color: #93C5FD;
     text-decoration: underline;
+  }
+`;
+
+const ContributionSection = styled.div`
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+`;
+
+const ContributionTitle = styled.h3`
+  color: #10B981;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+`;
+
+const ContributionText = styled.p`
+  color: #D1D5DB;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  text-align: left;
+`;
+
+const ContributionButton = styled.a`
+  background: #10B981;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  display: inline-block;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background: #059669;
   }
 `;
 
@@ -132,6 +171,21 @@ const WelcomeOverlay = ({ onClose }) => {
             </ContactLink>
           </ContactInfo>
         </ContactSection>
+        
+        <ContributionSection>
+          <ContributionTitle>🚀 Want to Contribute?</ContributionTitle>
+          <ContributionText>
+            We're building the future of collaborative work together! Whether you're interested 
+            in AI, data science, UX design, or simply want to share your ideas, we'd love to 
+            hear from you. Join us in shaping the next generation of workplace innovation.
+          </ContributionText>
+          <ContributionButton 
+            href="mailto:nico_Baburek@hotmail.com?subject=Conclusion Nexus - Contribution Interest"
+            target="_blank"
+          >
+            💡 Share Your Ideas
+          </ContributionButton>
+        </ContributionSection>
         
         <CloseButton onClick={onClose}>
           Continue to Nexus

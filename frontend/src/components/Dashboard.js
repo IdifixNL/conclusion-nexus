@@ -106,6 +106,25 @@ const CardButton = styled.button`
   }
 `;
 
+const FeedbackButton = styled.button`
+  background-color: #10B981;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 0.75rem;
+  box-shadow: 0 2px 8px 0 rgba(16, 185, 129, 0.07);
+  &:hover {
+    background-color: #059669;
+    box-shadow: 0 4px 16px 0 rgba(16, 185, 129, 0.13);
+  }
+`;
+
 const LoadingMessage = styled.div`
   text-align: center;
   padding: 4rem;
@@ -148,6 +167,12 @@ const Dashboard = ({ user }) => {
     navigate(`/chat/${roleType}`);
   };
 
+  const handleFeedbackClick = (cardTitle, roleType) => {
+    const subject = encodeURIComponent(`Conclusion Nexus - Feedback for ${cardTitle}`);
+    const body = encodeURIComponent(`Hi Nico,\n\nI'd like to share feedback about the "${cardTitle}" Chat Agent in Conclusion Nexus.\n\nMy feedback:\n\n[Please share your suggestions, feedback, or ideas here]\n\nBest regards,\n[Your name]`);
+    window.open(`mailto:nico_Baburek@hotmail.com?subject=${subject}&body=${body}`, '_blank');
+  };
+
   if (loading) {
     return (
       <Container>
@@ -168,21 +193,31 @@ const Dashboard = ({ user }) => {
     <Container>
       <Title>Welcome to Conclusion Nexus</Title>
       <Subtitle>
-        Select a specialized AI agent to assist you with your work
+        Experiment and explore with specialized AI agents to discover new ways of working
       </Subtitle>
       <CardsGrid>
         {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values()).map((card) => (
           <Card 
             key={card.role_type} 
             disabled={!card.is_active}
-            onClick={() => card.is_active && handleCardClick(card.role_type)}
           >
             {!card.is_active && <DisabledBadge>Disabled</DisabledBadge>}
             <CardTitle>{card.title}</CardTitle>
             <CardDescription>{card.description}</CardDescription>
-            <CardButton disabled={!card.is_active}>
+            <CardButton 
+              disabled={!card.is_active}
+              onClick={() => card.is_active && handleCardClick(card.role_type)}
+            >
               {card.is_active ? 'Start Chat' : 'Unavailable'}
             </CardButton>
+            <FeedbackButton 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFeedbackClick(card.title, card.role_type);
+              }}
+            >
+              💡 Share Feedback
+            </FeedbackButton>
           </Card>
         ))}
       </CardsGrid>

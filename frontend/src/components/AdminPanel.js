@@ -544,6 +544,7 @@ const AdminPanel = () => {
                 <tr>
                   <Th>ID</Th>
                   <Th>Title</Th>
+                  <Th>Description</Th>
                   <Th>Role Type</Th>
                   <Th>Status</Th>
                   <Th>Endpoint</Th>
@@ -559,6 +560,20 @@ const AdminPanel = () => {
                         <input name="title" value={editCard.title} onChange={handleEditCardChange} style={{ width: '100%' }} />
                       ) : (
                         card.title
+                      )}
+                    </Td>
+                    <Td>
+                      {editingCardId === card.id ? (
+                        <textarea 
+                          name="description" 
+                          value={editCard.description} 
+                          onChange={handleEditCardChange} 
+                          style={{ width: '100%', minHeight: '60px', resize: 'vertical' }} 
+                        />
+                      ) : (
+                        <div style={{ maxWidth: '200px', wordWrap: 'break-word' }}>
+                          {card.description}
+                        </div>
                       )}
                     </Td>
                     <Td>
@@ -581,7 +596,9 @@ const AdminPanel = () => {
                       {editingCardId === card.id ? (
                         <input name="webhook_url" value={editCard.webhook_url} onChange={handleEditCardChange} style={{ width: '100%' }} />
                       ) : (
-                        card.webhook_url
+                        <div style={{ maxWidth: '200px', wordWrap: 'break-word', fontSize: '0.875rem' }}>
+                          {card.webhook_url}
+                        </div>
                       )}
                     </Td>
                     <Td>
