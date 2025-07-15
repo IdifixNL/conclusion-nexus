@@ -24,6 +24,13 @@ const AppContainer = styled.div`
   font-family: 'Roboto', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 `;
 
+const AuthContainer = styled.div`
+  min-height: 100vh;
+  background-color: transparent;
+  color: ${colors.text};
+  font-family: 'Roboto', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+`;
+
 const MainContent = styled.main`
   padding-top: 80px;
   min-height: calc(100vh - 80px);
@@ -62,37 +69,65 @@ function App() {
 
   return (
     <Router>
-      <AppContainer>
-        <Header user={user} onLogout={handleLogout} />
-        <MainContent>
-          <Routes>
-            <Route 
-              path="/register" 
-              element={user ? <Navigate to="/dashboard" /> : <Register onLogin={handleLogin} />} 
-            />
-            <Route 
-              path="/login" 
-              element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} 
-            />
-            <Route 
-              path="/dashboard" 
-              element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} 
-            />
-            <Route 
-              path="/chat/:roleType" 
-              element={user ? <Chat user={user} /> : <Navigate to="/login" />} 
-            />
-            <Route 
-              path="/admin" 
-              element={user && isAdmin ? <AdminPanel /> : <Navigate to="/login" />} 
-            />
-            <Route 
-              path="/" 
-              element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
-            />
-          </Routes>
-        </MainContent>
-      </AppContainer>
+      <Routes>
+        <Route 
+          path="/register" 
+          element={
+            user ? <Navigate to="/dashboard" /> : (
+              <AuthContainer>
+                <Register onLogin={handleLogin} />
+              </AuthContainer>
+            )
+          } 
+        />
+        <Route 
+          path="/login" 
+          element={
+            user ? <Navigate to="/dashboard" /> : (
+              <AuthContainer>
+                <Login onLogin={handleLogin} />
+              </AuthContainer>
+            )
+          } 
+        />
+        <Route 
+          path="/dashboard" 
+          element={
+            <AppContainer>
+              <Header user={user} onLogout={handleLogout} />
+              <MainContent>
+                {user ? <Dashboard user={user} /> : <Navigate to="/login" />}
+              </MainContent>
+            </AppContainer>
+          } 
+        />
+        <Route 
+          path="/chat/:roleType" 
+          element={
+            <AppContainer>
+              <Header user={user} onLogout={handleLogout} />
+              <MainContent>
+                {user ? <Chat user={user} /> : <Navigate to="/login" />}
+              </MainContent>
+            </AppContainer>
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            <AppContainer>
+              <Header user={user} onLogout={handleLogout} />
+              <MainContent>
+                {user && isAdmin ? <AdminPanel /> : <Navigate to="/login" />}
+              </MainContent>
+            </AppContainer>
+          } 
+        />
+        <Route 
+          path="/" 
+          element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
+        />
+      </Routes>
     </Router>
   );
 }
