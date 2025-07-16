@@ -32,12 +32,17 @@ const Subtitle = styled.p`
 
 const CardsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 769px) and (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 `;
 
@@ -142,6 +147,66 @@ const ErrorMessage = styled.div`
   margin: 2rem 0;
 `;
 
+const RequestCard = styled.div`
+  background: #f3f4f6;
+  border: 2px dashed #9CA3AF;
+  border-radius: 1.25rem;
+  padding: 2.25rem 2rem 2rem 2rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  
+  &:hover {
+    border-color: #E31E54;
+    background-color: #fef2f2;
+    transform: translateY(-2px) scale(1.015);
+  }
+`;
+
+const RequestIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #9CA3AF;
+`;
+
+const RequestTitle = styled.h3`
+  color: #374151;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const RequestDescription = styled.p`
+  color: #6B7280;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+`;
+
+const RequestButton = styled.button`
+  background-color: #E31E54;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s, box-shadow 0.18s;
+  font-size: 1.05rem;
+  margin-top: auto;
+  box-shadow: 0 2px 8px 0 rgba(0,40,85,0.07);
+  
+  &:hover {
+    background-color: #BE185D;
+    box-shadow: 0 4px 16px 0 rgba(0,40,85,0.13);
+  }
+`;
+
 const Dashboard = ({ user }) => {
   const [roleCards, setRoleCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,6 +238,12 @@ const Dashboard = ({ user }) => {
     window.open(`mailto:nico_Baburek@hotmail.com?subject=${subject}&body=${body}`, '_blank');
   };
 
+  const handleRequestClick = () => {
+    const subject = encodeURIComponent('Conclusion Nexus - New Chat Agent Request');
+    const body = encodeURIComponent(`Hi Nico,\n\nI'd like to request a new Chat Agent for Conclusion Nexus.\n\nMy request:\n\n[Please describe the type of AI agent you'd like to see added]\n\nBest regards,\n[Your name]`);
+    window.open(`mailto:nico_Baburek@hotmail.com?subject=${subject}&body=${body}`, '_blank');
+  };
+
   if (loading) {
     return (
       <Container>
@@ -196,30 +267,75 @@ const Dashboard = ({ user }) => {
         Experiment and explore with specialized AI agents to discover new ways of working
       </Subtitle>
       <CardsGrid>
-        {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values()).map((card) => (
-          <Card 
-            key={card.role_type} 
-            disabled={!card.is_active}
-          >
-            {!card.is_active && <DisabledBadge>Disabled</DisabledBadge>}
-            <CardTitle>{card.title}</CardTitle>
-            <CardDescription>{card.description}</CardDescription>
-            <CardButton 
+        {/* First row: 2 regular cards + 1 request card */}
+        {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values())
+          .filter(card => card.is_active)
+          .slice(0, 2)
+          .map((card) => (
+            <Card 
+              key={card.role_type} 
               disabled={!card.is_active}
-              onClick={() => card.is_active && handleCardClick(card.role_type)}
             >
-              {card.is_active ? 'Start Chat' : 'Unavailable'}
-            </CardButton>
-            <FeedbackButton 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleFeedbackClick(card.title, card.role_type);
-              }}
+              {!card.is_active && <DisabledBadge>Disabled</DisabledBadge>}
+              <CardTitle>{card.title}</CardTitle>
+              <CardDescription>{card.description}</CardDescription>
+              <CardButton 
+                disabled={!card.is_active}
+                onClick={() => card.is_active && handleCardClick(card.role_type)}
+              >
+                {card.is_active ? 'Start Chat' : 'Unavailable'}
+              </CardButton>
+              <FeedbackButton 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFeedbackClick(card.title, card.role_type);
+                }}
+              >
+                💡 Share Feedback
+              </FeedbackButton>
+            </Card>
+          ))}
+        
+        {/* Request card in top-right position */}
+        <RequestCard onClick={handleRequestClick}>
+          <RequestIcon>💭</RequestIcon>
+          <RequestTitle>Request New Agent</RequestTitle>
+          <RequestDescription>
+            Don't see the AI agent you need? Let us know what type of specialized assistant would help you most.
+          </RequestDescription>
+          <RequestButton>
+            📧 Make Request
+          </RequestButton>
+        </RequestCard>
+        
+        {/* Remaining cards (3 per row) */}
+        {Array.from(new Map(roleCards.map(card => [card.role_type, card])).values())
+          .filter(card => card.is_active)
+          .slice(2)
+          .map((card) => (
+            <Card 
+              key={card.role_type} 
+              disabled={!card.is_active}
             >
-              💡 Share Feedback
-            </FeedbackButton>
-          </Card>
-        ))}
+              {!card.is_active && <DisabledBadge>Disabled</DisabledBadge>}
+              <CardTitle>{card.title}</CardTitle>
+              <CardDescription>{card.description}</CardDescription>
+              <CardButton 
+                disabled={!card.is_active}
+                onClick={() => card.is_active && handleCardClick(card.role_type)}
+              >
+                {card.is_active ? 'Start Chat' : 'Unavailable'}
+              </CardButton>
+              <FeedbackButton 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFeedbackClick(card.title, card.role_type);
+                }}
+              >
+                💡 Share Feedback
+              </FeedbackButton>
+            </Card>
+          ))}
       </CardsGrid>
     </Container>
   );

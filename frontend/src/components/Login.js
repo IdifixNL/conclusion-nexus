@@ -39,21 +39,6 @@ const ProjectName = styled.div`
     animation: glow 2s ease-in-out infinite alternate;
   }
   
-  .conclusion .letter {
-    display: inline-block;
-  }
-  
-  .conclusion .letter:nth-child(1) { color: #FF6B6B; }
-  .conclusion .letter:nth-child(2) { color: #4ECDC4; }
-  .conclusion .letter:nth-child(3) { color: #45B7D1; }
-  .conclusion .letter:nth-child(4) { color: #96CEB4; }
-  .conclusion .letter:nth-child(5) { color: #FFEAA7; }
-  .conclusion .letter:nth-child(6) { color: #DDA0DD; }
-  .conclusion .letter:nth-child(7) { color: #98D8C8; }
-  .conclusion .letter:nth-child(8) { color: #F7DC6F; }
-  .conclusion .letter:nth-child(9) { color: #BB8FCE; }
-  .conclusion .letter:nth-child(10) { color: #85C1E9; }
-  
   @keyframes glow {
     0% { text-shadow: 0 0 5px currentColor; }
     100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
@@ -168,17 +153,8 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  useEffect(() => {
-    // Show overlay on first visit (check if user has seen it before)
-    const hasSeenOverlay = localStorage.getItem('hasSeenWelcomeOverlay');
-    if (!hasSeenOverlay) {
-      setShowOverlay(true);
-    }
-  }, []);
-
   const handleCloseOverlay = () => {
     setShowOverlay(false);
-    localStorage.setItem('hasSeenWelcomeOverlay', 'true');
   };
 
   const handleChange = (e) => {
@@ -214,11 +190,7 @@ const Login = ({ onLogin }) => {
       <Container>
         <FormContainer>
             <ProjectName>
-              <span className="conclusion">
-                {'Conclusion'.split('').map((letter, index) => (
-                  <span key={index} className="letter">{letter}</span>
-                ))}
-              </span>
+              <span className="conclusion">Conclusion</span>
               {' '}
               <span className="nexus">Nexus</span>
             </ProjectName>
